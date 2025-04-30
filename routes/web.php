@@ -9,12 +9,7 @@ use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\EmployeeController;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return Inertia::render('Welcome');
 });
 
 Route::get('/dashboard', function () {
@@ -28,11 +23,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('/employees/create', [EmployeeController::class, 'createForm'])->name('employees.create');
-    Route::post('/employees', [EmployeeController::class, 'create'])->name('employees.store');
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/employees', [EmployeeController::class, 'index'])->name('dashboard.employees.index');
+        Route::post('/employees', [EmployeeController::class, 'create'])->name('dashboard.employees.store');
+        Route::get('/employees/create', [EmployeeController::class, 'createForm'])->name('dashboard.employees.create');
+
+        Route::get('/phoness', [PhoneController::class, 'index'])->name('dashboard.phones.index');
+    });
 });
 
 //public pages
-Route::get('/phones', action: [PhoneController::class, 'index'])->name("phones");
+Route::get('/phones', action: [PhoneController::class, 'publicIndex'])->name("public.phones");
 
 require __DIR__ . '/auth.php';

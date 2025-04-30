@@ -3,20 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Phone;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
+use Symfony\Component\CssSelector\Node\FunctionNode;
 
 class PhoneController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function publicIndex()
     {
-        return Inertia::render("Phones/Index");
+        return Inertia::render(component: "Public/Phones/Index");
     }
 
+    public function index(){
+        $employees = Employee::with('phone')->get();
+        return Inertia::render(component: "Phones/Index" , props : ['employees' => $employees]);
+    }
     /**
      * Show the form for creating a new resource.
      */
