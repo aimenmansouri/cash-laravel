@@ -36,14 +36,15 @@ class PhoneController extends Controller
     {
         $validated = $request->validate([
             'emp_id' => 'required|exists:employees,id',
-            'phone_number'  => 'nullable|string|max:3',
+            'phone_number'  => 'required|string|max:3',
         ]);
 
         $existingPhone = Phone::where('phone_number', $validated['phone_number'])->first();
         if ($existingPhone) {
-            return response()->json([
-                'message' => 'This phone number is already assigned to another employee.',
-            ], 400);
+
+            return redirect()->back()
+                ->withErrors(['phone_number' => 'This phone number is already assigned to another employee.'])
+                ->withInput();
         }
 
         $employee = Employee::find($validated['emp_id']);
@@ -60,9 +61,9 @@ class PhoneController extends Controller
             'phone_number' => $validated['phone_number']
         ]);
 
-        return response()->json([
+        redirect()->back()->with([
             'message' => 'phone number assigned to employee',
-        ], 200);
+        ]);
     }
 
     /**
@@ -100,8 +101,13 @@ class PhoneController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Phone $phone)
+    public function destroy(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'phone_id' => 'required|exists:phones,id',
+        ]);
+        $phone = Phone::findOrFail($validated['phone_id']);
+        $phone->delete();
+        return redirect()->back()->with('success', 'Phone number removed successfully');
     }
 }

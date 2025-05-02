@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/phones', [PhoneController::class, 'index'])->name('dashboard.phones.index');
         Route::post('/phones', [PhoneController::class, 'assign'])->name('dashboard.phones.assign');
+        Route::delete('/phones', [PhoneController::class, 'destroy'])->name('dashboard.phones.destroy');
     });
 });
 
