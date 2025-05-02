@@ -14,15 +14,22 @@ import {
 import Employee from "@/types/app/Employee";
 
 import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
 
+import { router } from "@inertiajs/react";
+import { Trash } from "lucide-react";
 interface IndexInterface {
     employees: Employee[];
 }
 
 export default function Index({ employees = [] }: IndexInterface) {
-    const assignPhone = (newPhone : string ) => {
-
-    }
+    const assignPhone = async (phone_number: string, emp_id: number) => {
+        console.log({ phone_number, emp_id });
+        router.post(route("dashboard.phones.assign"), { phone_number, emp_id });
+    };
+    const removePhone = async (phoneId: number) => {
+        console.log(phoneId);
+    };
 
     return (
         <AuthenticatedLayout
@@ -43,16 +50,16 @@ export default function Index({ employees = [] }: IndexInterface) {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Name</TableHead>
                                 <TableHead>Phone number</TableHead>
-                                <TableHead className="text-right">
+                                <TableHead>Department</TableHead>
+                                <TableHead className="text-center w-48">
                                     Action
                                 </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {employees.map((emp) => (
-                                <TableRow>
+                                <TableRow key={emp.id}>
                                     <TableCell className="font-medium">{`${emp.first_name} ${emp.last_name}`}</TableCell>
                                     <TableCell>
                                         {emp.phone
@@ -65,7 +72,38 @@ export default function Index({ employees = [] }: IndexInterface) {
                                             : "None"}
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        $250.00
+                                        <div className="flex space-x-3">
+                                            <Input
+                                                defaultValue={
+                                                    emp.phone
+                                                        ? emp.phone.phone_number
+                                                        : ""
+                                                }
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter") {
+                                                        const inputValue =
+                                                            e.target.value;
+
+                                                        assignPhone(
+                                                            inputValue,
+                                                            emp.id
+                                                        );
+                                                    }
+                                                }}
+                                            ></Input>
+                                            <Button
+                                                disabled={!emp.phone}
+                                                variant={"destructive"}
+                                                onClick={() => {
+                                                    if (emp.phone)
+                                                        removePhone(
+                                                            emp.phone?.id
+                                                        );
+                                                }}
+                                            >
+                                                Phone <Trash />
+                                            </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}

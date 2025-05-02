@@ -28,7 +28,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/employees', [EmployeeController::class, 'create'])->name('dashboard.employees.store');
         Route::get('/employees/create', [EmployeeController::class, 'createForm'])->name('dashboard.employees.create');
 
-        Route::get('/phoness', [PhoneController::class, 'index'])->name('dashboard.phones.index');
+        Route::get('/phones', [PhoneController::class, 'index'])->name('dashboard.phones.index');
+        Route::post('/phones', [PhoneController::class, 'assign'])->name('dashboard.phones.assign');
     });
 });
 
