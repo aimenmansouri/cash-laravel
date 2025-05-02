@@ -13,7 +13,9 @@ const NavLink = ({ href, name }: NavLinkInterface) => {
     );
 };
 
-const navLinks: NavLinkInterface[] = [{ name: "Phones", href: "/phones" }];
+export const navLinks: NavLinkInterface[] = [
+    { name: "Phones", href: "/phones" },
+];
 
 export default function Welcome() {
     return (

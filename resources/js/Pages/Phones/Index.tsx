@@ -33,6 +33,7 @@ export default function Index({ employees = [] }: IndexInterface) {
             { phone_number, emp_id },
             {
                 onSuccess: (message) => {
+                    console.log(message);
                     toast({ description: "Phone assigned successfully" });
                 },
                 onError: (errors) => {
