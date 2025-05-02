@@ -9,7 +9,7 @@ use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\EmployeeController;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return Inertia::render('Public/Welcome');
 });
 
 Route::get('/dashboard', function () {

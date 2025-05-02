@@ -13,6 +13,8 @@ const NavLink = ({ href, name }: NavLinkInterface) => {
     );
 };
 
+const navLinks: NavLinkInterface[] = [{ name: "Phones", href: "/phones" }];
+
 export default function Welcome() {
     return (
         <div className="flex h-screen items-center">
@@ -23,12 +25,14 @@ export default function Welcome() {
                     alt=""
                 />
                 <div className="flex justify-center mt-3">
-                    <span className=" text-lg font-bold">Direction Régionale Annaba</span>
+                    <span className=" text-lg font-bold">
+                        Direction Régionale Annaba
+                    </span>
                 </div>
                 <div className="mx-auto space-x-3 flex w-fit mt-6">
-                    <NavLink href="/phones" name="Phones" />
-                    <NavLink href="/phones" name="Phones" />
-                    <NavLink href="/phones" name="Phones" />
+                    {navLinks.map((link) => {
+                        return <NavLink href={link.href} name={link.name} />;
+                    })}
                 </div>
             </div>
         </div>
