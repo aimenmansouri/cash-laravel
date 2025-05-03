@@ -39,7 +39,8 @@ export default function Index({ employees = [] }: indexProps) {
     return (
         <Guest>
             <div className="space-y-6">
-                <h1 className="text-2xl font-bold mb-6">
+                <h1 className="text-2xl flex font-bold mb-6">
+                    <Users className="mr-1" />
                     Employee Phone Directory
                 </h1>
 
@@ -48,7 +49,7 @@ export default function Index({ employees = [] }: indexProps) {
                         Search :
                     </label>
                     <Input
-                        placeholder="Filter by first name..."
+                        placeholder="Filter by name and phone number ..."
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
                         className="w-full"
