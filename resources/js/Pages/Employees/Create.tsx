@@ -59,7 +59,15 @@ export default function CreateUserForm() {
         "Research & Development",
     ];
 
-    const workplaces = ["00500", "D0501"];
+    const workplaces = [
+        "00500",
+        "D0501",
+        "D0502",
+        "D0503",
+        "D0504",
+        "D0505",
+        "D0507",
+    ];
 
     return (
         <AuthenticatedLayout

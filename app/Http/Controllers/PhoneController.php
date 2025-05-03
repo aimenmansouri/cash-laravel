@@ -16,7 +16,8 @@ class PhoneController extends Controller
      */
     public function publicIndex()
     {
-        return Inertia::render(component: "Public/Phones/Index");
+        $employees = Employee::orderBy('workplace')->with('phone')->get();
+        return Inertia::render(component: "Public/Phones/Index", props: ['employees' => $employees]);
     }
 
     public function index()
