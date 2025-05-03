@@ -29,7 +29,11 @@ export default function Index({ employees = [] }: indexProps) {
             .toLowerCase()
             .includes(filter.toLowerCase());
 
-        return matchFirstName || matchLastName;
+        const matchPhone = employee.phone?.phone_number
+            .toLowerCase()
+            .includes(filter.toLowerCase());
+
+        return matchFirstName || matchLastName || matchPhone;
     });
 
     return (

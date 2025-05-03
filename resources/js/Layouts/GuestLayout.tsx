@@ -31,7 +31,7 @@ function NavLink({
 export default function Guest({ children }: PropsWithChildren) {
     return (
         <>
-            <div className="min-h-screen bg-gray-50 flex-col">
+            <div className="min-h-screen bg-gray-50 flex flex-col space-y-6">
                 {/* Header */}
                 <header className="bg-white shadow-sm border-t-4 border-cash-red">
                     <div className="max-w-6xl mx-auto px-4 py-4 flex justify-center items-center">
@@ -44,11 +44,11 @@ export default function Guest({ children }: PropsWithChildren) {
                     </div>
                 </header>
 
-                <main className="max-w-6xl mx-auto px-4 py-8 flex-1">
+                <main className="mx-auto max-w-6xl w-full flex-grow">
                     {children}
                 </main>
 
-                <footer className="bg-white border-t mt-auto self-end">
+                <footer className="bg-white border-t mt-auto">
                     <div className="max-w-6xl mx-auto px-4 py-4">
                         <p className="text-center text-sm text-gray-500">
                             © {new Date().getFullYear()} CASH Assurances. All
