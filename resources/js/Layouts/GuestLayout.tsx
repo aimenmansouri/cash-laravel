@@ -51,7 +51,7 @@ export default function Guest({ children }: PropsWithChildren) {
                 <footer className="bg-white border-t mt-auto">
                     <div className="max-w-6xl mx-auto px-4 py-4">
                         <p className="text-center text-sm text-gray-500">
-                            © {new Date().getFullYear()} CASH Assurances. All
+                            © {new Date().getFullYear()} MANSOURI Aymene. All
                             rights reserved.
                         </p>
                     </div>
