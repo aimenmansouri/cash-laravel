@@ -99,7 +99,7 @@ export default function Index({ employees = [] }: IndexInterface) {
                                 <TableHead>Name</TableHead>
                                 <TableHead>Phone number</TableHead>
                                 <TableHead>Department</TableHead>
-                                <TableHead className="text-center w-48">
+                                <TableHead className="text-center w-52">
                                     Action
                                 </TableHead>
                             </TableRow>

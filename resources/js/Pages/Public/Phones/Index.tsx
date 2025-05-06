@@ -60,7 +60,7 @@ export default function Index({ employees = [] }: indexProps) {
                     <TableCaption>Employee Phone Directory</TableCaption>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>ID</TableHead>
+                            <TableHead>#</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Department</TableHead>
                             <TableHead>Workplace</TableHead>
@@ -71,10 +71,10 @@ export default function Index({ employees = [] }: indexProps) {
                     </TableHeader>
                     <TableBody>
                         {filteredEmployees.length > 0 ? (
-                            filteredEmployees.map((employee) => (
+                            filteredEmployees.map((employee , index) => (
                                 <TableRow key={employee.id}>
                                     <TableCell className="font-medium">
-                                        {employee.id}
+                                        {index + 1}
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex items-center">

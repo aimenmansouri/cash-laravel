@@ -49,7 +49,7 @@ export default function CreateUserForm() {
     };
 
     const departments = [
-        "Engineering",
+        "IT department",
         "Marketing",
         "Sales",
         "Human Resources",
@@ -73,7 +73,7 @@ export default function CreateUserForm() {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Dashboard
+                    Create Employee
                 </h2>
             }
         >
