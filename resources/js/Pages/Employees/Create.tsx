@@ -36,7 +36,7 @@ export default function CreateUserForm() {
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     // Submit handler
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: any) => {
         e.preventDefault();
         console.log(data);
         post(route("dashboard.employees.store"), {
