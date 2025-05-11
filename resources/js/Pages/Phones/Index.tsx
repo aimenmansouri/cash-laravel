@@ -126,7 +126,7 @@ export default function Index({ employees = [] }: IndexInterface) {
                                                         ? emp.phone.phone_number
                                                         : ""
                                                 }
-                                                onKeyDown={(e) => {
+                                                onKeyDown={(e: any) => {
                                                     if (e.key === "Enter") {
                                                         const inputValue =
                                                             e.target.value;
