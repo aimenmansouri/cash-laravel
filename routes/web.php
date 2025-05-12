@@ -17,18 +17,20 @@ Route::get('/', function () {
     return Inertia::render('Public/Welcome');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth'])->name('dashboard');
+
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+    Route::middleware(AdminOnly::class)->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 
     Route::prefix('dashboard')->middleware(AdminOnly::class)->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Dashboard');
+        })->name('dashboard');
         Route::get('/employees', [EmployeeController::class, 'index'])->name('dashboard.employees.index');
         Route::post('/employees', [EmployeeController::class, 'create'])->name('dashboard.employees.store');
         Route::get('/employees/create', [EmployeeController::class, 'createForm'])->name('dashboard.employees.create');

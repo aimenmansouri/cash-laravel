@@ -36,21 +36,28 @@ export default function Guest({ children }: PropsWithChildren) {
                 <header className="bg-white shadow-sm border-t-4 border-cash-red">
                     <div className="max-w-6xl mx-auto px-4 py-4 flex justify-center items-center">
                         <nav className="flex items-center space-x-6">
-                            <NavLink href="/" active={true}>
+                            <NavLink href={route("hr.index")} active={true}>
                                 <Home size={18} className="mr-1" />
                                 Home
                             </NavLink>
-                            <Link
-                                className="bg-green-900 px-2 py-0.5 rounded text-white font-semibold"
-                                href={route("login")}
+                            <NavLink
+                                href={route("hr.attendance.index")}
+                                active={true}
                             >
-                                login
+                                Attendance
+                            </NavLink>
+                            <Link
+                                className="bg-cash-red px-2 py-0.5 rounded text-white font-semibold"
+                                href={route("logout")}
+                                method="post"
+                            >
+                                logout
                             </Link>
                         </nav>
                     </div>
                 </header>
 
-                <main className="mx-auto max-w-6xl w-full flex-grow">
+                <main className="mx-auto max-w-6xl w-full flex-grow bg-white rounded h-[2000px] px-3 py-1">
                     {children}
                 </main>
 

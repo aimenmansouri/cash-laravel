@@ -9,6 +9,6 @@ class HRController extends Controller
 {
     public function index()
     {
-        return Inertia::render("Attendance/Index");
+        return Inertia::render("HR/Index");
     }
 }

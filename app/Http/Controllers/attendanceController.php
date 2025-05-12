@@ -9,6 +9,6 @@ class attendanceController extends Controller
 {
     public function index()
     {
-        return Inertia::render("HR/Index");
+        return Inertia::render("HR/Attendance/Index");
     }
 }
