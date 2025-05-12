@@ -10,13 +10,16 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\HROnly;
 
+use App\Http\Controllers\attendanceController;
+use App\Http\Controllers\HRController;
+
 Route::get('/', function () {
     return Inertia::render('Public/Welcome');
 });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
@@ -33,6 +36,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/phones', [PhoneController::class, 'index'])->name('dashboard.phones.index');
         Route::post('/phones', [PhoneController::class, 'assign'])->name('dashboard.phones.assign');
         Route::delete('/phones', [PhoneController::class, 'destroy'])->name('dashboard.phones.destroy');
+    })->middleware(AdminOnly::class);
+
+    Route::prefix('hr')->middleware(HROnly::class)->group(function () {
+        Route::get('/', [HRController::class, 'index'])->name('hr.index');
+        Route::get('/attendance', [attendanceController::class, 'index'])->name('hr.attendance.index');
     });
 });
 

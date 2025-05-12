@@ -13,10 +13,14 @@ class HROnly
     {
         $user = Auth::user();
 
-        if (!$user || ($user->type !== 'hr' || $user->type !== 'admin')) {
+        if (!$user) {
             abort(403, 'Access denied – HR only.');
         }
 
-        return $next($request);
+        if ($user->type === 'admin' || $user->type === 'hr') {
+            return $next($request);
+        }
+
+        abort(403, 'Access denied – HR only.');
     }
 }
