@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\EmployeeController;
+
+use App\Http\Middleware\AdminOnly;
+use App\Http\Middleware\HROnly;
 
 Route::get('/', function () {
     return Inertia::render('Public/Welcome');
@@ -23,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::prefix('dashboard')->group(function () {
+    Route::prefix('dashboard')->middleware(AdminOnly::class)->group(function () {
         Route::get('/employees', [EmployeeController::class, 'index'])->name('dashboard.employees.index');
         Route::post('/employees', [EmployeeController::class, 'create'])->name('dashboard.employees.store');
         Route::get('/employees/create', [EmployeeController::class, 'createForm'])->name('dashboard.employees.create');
