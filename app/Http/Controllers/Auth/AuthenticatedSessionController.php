@@ -33,6 +33,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $user = auth()->user();
+
+        if ($user->type === 'hr') {
+            return redirect()->route('hr.index');
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

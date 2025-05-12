@@ -6,6 +6,13 @@ import { Link, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useState } from "react";
 import { Toaster } from "@/Components/ui/toaster";
 
+interface navlinkInterface {
+    name: string;
+    route: string;
+}
+
+const navLinks: navlinkInterface[] = [];
+
 export default function Authenticated({
     header,
     children,
@@ -38,7 +45,9 @@ export default function Authenticated({
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route("dashboard.employees.create")}
-                                    active={route().current("dashboard.employees.create")}
+                                    active={route().current(
+                                        "dashboard.employees.create"
+                                    )}
                                 >
                                     Create Employee
                                 </NavLink>
@@ -46,7 +55,9 @@ export default function Authenticated({
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route("dashboard.phones.index")}
-                                    active={route().current("dashboard.phones.index")}
+                                    active={route().current(
+                                        "dashboard.phones.index"
+                                    )}
                                 >
                                     Phones
                                 </NavLink>
