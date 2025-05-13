@@ -20,6 +20,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 
+import { Sheet } from "lucide-react";
 interface AgencyCode {
     value: string;
     label: string;
@@ -42,13 +43,28 @@ export default function Index() {
     const [loading, setLoading] = useState(false);
     const [responseData, setResponseData] = useState<any>(null);
 
-    const handleSubmit = async () => {
+    const handleSubmitGetAtt = async () => {
         setLoading(true);
         try {
             const response = await axios.get(route("hr.attendance.get"), {
                 params: formData,
             });
             setResponseData(response.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error("Fetch error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSubmitGetSheet = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(route("hr.attendance.get_sheet"), {
+                params: formData,
+            });
+            console.log("get sheet");
             console.log(response.data);
         } catch (error) {
             console.error("Fetch error:", error);
@@ -197,9 +213,21 @@ export default function Index() {
                             </div>
                         </div>
 
-                        <div className="flex justify-end mt-4">
-                            <Button onClick={handleSubmit} disabled={loading}>
-                                {loading ? "loading..." : "Get attendance"}
+                        <div className="flex justify-end mt-4 space-x-2">
+                            <Button
+                                onClick={handleSubmitGetAtt}
+                                disabled={loading}
+                                className="bg-[#185C37]"
+                            >
+                                <Sheet />
+                                Get excel sheet
+                            </Button>
+
+                            <Button
+                                onClick={handleSubmitGetAtt}
+                                disabled={loading}
+                            >
+                                Get attendance
                             </Button>
                         </div>
                     </CardContent>

@@ -20,4 +20,8 @@ class attendanceController extends Controller
             'data' => $request->all()
         ]);
     }
+    
+    public function get_sheet(Request $request){
+        dd($request->all());
+    }
 }
