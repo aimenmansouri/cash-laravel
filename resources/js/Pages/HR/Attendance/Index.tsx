@@ -31,7 +31,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
-
+import { Input } from "@/Components/ui/input";
 interface AgencyCode {
     value: string;
     label: string;
@@ -47,7 +47,17 @@ export default function Index() {
     });
 
     const [loading, setLoading] = useState(false);
-    const [responseData, setResponseData] = useState<any>(null);
+    const [responseData, setResponseData] = useState<any>([]);
+    const [search, setSearch] = useState<string>("");
+
+    const filteredAtts = responseData.filter((att: any) => {
+        const matchName = att.name.toLowerCase().includes(search.toLowerCase());
+        const matchTimestamp = att.timestamp
+            .toLowerCase()
+            .includes(search.toLowerCase());
+
+        return matchName || matchTimestamp;
+    });
 
     const handleSubmitGetAtt = async () => {
         setLoading(true);
@@ -55,7 +65,7 @@ export default function Index() {
             const response = await axios.get(route("hr.attendance.get"), {
                 params: formData,
             });
-            setResponseData(response.data);
+            setResponseData(JSON.parse(response.data.data));
         } catch (error) {
             console.error("Fetch error:", error);
         } finally {
@@ -243,7 +253,18 @@ export default function Index() {
                         <CardTitle>Attendance Response</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {responseData ? (
+                        <div className="w-1/2 mb-3">
+                            <label className="block text-sm font-medium mb-1">
+                                Search :
+                            </label>
+                            <Input
+                                placeholder="Filter by name and phone number ..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full"
+                            />
+                        </div>
+                        {(filteredAtts.length != 0) ? (
                             <Table>
                                 <TableCaption>Attendance table</TableCaption>
                                 <TableHeader>
@@ -258,7 +279,7 @@ export default function Index() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {JSON.parse(responseData.data).map((i: any) => (
+                                    {filteredAtts.map((i: any) => (
                                         <TableRow key={i.timestamp}>
                                             <TableCell className="font-medium">
                                                 {i.user_id}
@@ -272,7 +293,7 @@ export default function Index() {
                                 </TableBody>
                             </Table>
                         ) : (
-                            <p className="text-muted-foreground">No data yet</p>
+                            <p className="text-muted-foreground text-center">No data</p>
                         )}
                     </CardContent>
                 </Card>
