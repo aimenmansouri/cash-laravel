@@ -57,7 +57,7 @@ export default function Guest({ children }: PropsWithChildren) {
                     </div>
                 </header>
 
-                <main className="mx-auto max-w-6xl w-full flex-grow bg-white rounded h-[2000px] px-3 py-1">
+                <main className="mx-auto max-w-6xl w-full flex-grow bg-white rounded shadow-lg px-3 py-1">
                     {children}
                 </main>
 

@@ -11,4 +11,13 @@ class attendanceController extends Controller
     {
         return Inertia::render("HR/Attendance/Index");
     }
+
+    public function get(Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Data retrieved successfully',
+            'data' => $request->all()
+        ]);
+    }
 }

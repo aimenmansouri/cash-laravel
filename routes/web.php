@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('hr')->middleware(HROnly::class)->group(function () {
         Route::get('/', [HRController::class, 'index'])->name('hr.index');
         Route::get('/attendance', [attendanceController::class, 'index'])->name('hr.attendance.index');
+        Route::get('/attendance/get', [attendanceController::class, 'get'])->name('hr.attendance.get');
     });
 });
 
