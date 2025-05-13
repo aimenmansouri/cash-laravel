@@ -84,11 +84,11 @@ export default function Index() {
         }
     };
 
-    const handleSubmitGetUsers = async () => {
+    const handleSubmitGetUsers = async (agency_code: string) => {
         setLoading2(true);
         try {
             const response = await axios.get(route("hr.attendance.get_users"), {
-                params: formData2,
+                params: { agency_code },
             });
             console.log("get sheet");
             setUsers(JSON.parse(response.data.data).users);
@@ -118,17 +118,20 @@ export default function Index() {
                         <CardTitle>Export excel</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="w-1/2 mx-auto mb-3">
                             {/* Agency Code */}
                             <div className="flex flex-col space-y-1.5">
                                 Agency Code
                                 <Select
+                                    disabled={loading2}
                                     value={formData2.agency_code}
                                     onValueChange={(value) => {
                                         setFormData2((prev) => ({
                                             ...prev,
                                             agency_code: value,
                                         }));
+
+                                        handleSubmitGetUsers(value);
                                     }}
                                 >
                                     <SelectTrigger>
@@ -148,16 +151,6 @@ export default function Index() {
                             </div>
                         </div>
 
-                        <div className="flex justify-end mt-4 space-x-2">
-                            <Button
-                                onClick={handleSubmitGetUsers}
-                                disabled={loading2}
-                                className="bg-[#185C37]"
-                            >
-                                <Sheet />
-                                Get excel sheet
-                            </Button>
-                        </div>
                         {users.length != 0 ? (
                             <Table>
                                 <TableCaption>Attendance table</TableCaption>
@@ -190,8 +183,7 @@ export default function Index() {
                             </Table>
                         ) : (
                             <p className="text-muted-foreground text-center">
-                                Select agency and click Get excel sheet to show
-                                users
+                                Select agency to show users.
                             </p>
                         )}
                     </CardContent>
