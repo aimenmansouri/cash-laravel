@@ -21,17 +21,23 @@ import { CalendarIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 
 import { Sheet } from "lucide-react";
+
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/Components/ui/table";
+
 interface AgencyCode {
     value: string;
     label: string;
 }
 
-const agencyCodes: AgencyCode[] = [
-    { value: "AGC001", label: "Agency 001" },
-    { value: "AGC002", label: "Agency 002" },
-    { value: "AGC003", label: "Agency 003" },
-    { value: "AGC004", label: "Agency 004" },
-];
+const agencyCodes: AgencyCode[] = [{ value: "00500", label: "DR Annaba" }];
 
 export default function Index() {
     const [formData, setFormData] = useState({
@@ -50,7 +56,6 @@ export default function Index() {
                 params: formData,
             });
             setResponseData(response.data);
-            console.log(response.data);
         } catch (error) {
             console.error("Fetch error:", error);
         } finally {
@@ -239,9 +244,33 @@ export default function Index() {
                     </CardHeader>
                     <CardContent>
                         {responseData ? (
-                            <pre className="text-sm">
-                                {JSON.stringify(responseData, null, 2)}
-                            </pre>
+                            <Table>
+                                <TableCaption>Attendance table</TableCaption>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-[100px]">
+                                            ID
+                                        </TableHead>
+                                        <TableHead>Name</TableHead>
+                                        <TableHead className="text-right">
+                                            Time
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {JSON.parse(responseData.data).map((i: any) => (
+                                        <TableRow key={i.timestamp}>
+                                            <TableCell className="font-medium">
+                                                {i.user_id}
+                                            </TableCell>
+                                            <TableCell>{i.name}</TableCell>
+                                            <TableCell className="text-right">
+                                                {i.timestamp}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
                         ) : (
                             <p className="text-muted-foreground">No data yet</p>
                         )}
