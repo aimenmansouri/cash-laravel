@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/attendance', [attendanceController::class, 'index'])->name('hr.attendance.index');
         Route::get('/attendance/get', [attendanceController::class, 'get'])->name('hr.attendance.get');
         Route::get('/attendance/get-sheet', [attendanceController::class, 'get_sheet'])->name('hr.attendance.get_sheet');
+        Route::get('/attendance/get-users', [attendanceController::class, 'get_users'])->name('hr.attendance.get_users');
     });
 });
 
