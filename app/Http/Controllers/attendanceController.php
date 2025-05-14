@@ -15,6 +15,85 @@ class attendanceController extends Controller
         return Inertia::render("HR/Attendance/Index");
     }
 
+    public function syncAttendance(Request $request)
+    {
+        $agencies_dict = ['00500' => '192.168.50.201'];
+
+        $request->validate([
+            'agency_code' => ['required', Rule::in(array_keys($agencies_dict))],
+        ]);
+
+        $deviceIp = $agencies_dict[$request->agency_code];
+
+        $usersUrl = env('FLASK_URL') . '/api/attendance/get-users';
+        $attsUrl = env('FLASK_URL') . '/api/attendance/get-attendance';
+
+        $users_res = Http::get($usersUrl, [
+            'device_ip' => $deviceIp,
+        ]);
+
+        if ($users_res->failed()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve users from the Flask server',
+            ], 500);
+        }
+
+        $atts_res = Http::get($attsUrl, [
+            'device_ip' => $deviceIp,
+            'start_date' => '1970-01-01',
+            'end_date'   => '2100-01-01',
+        ]);
+
+        if ($atts_res->failed()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve attendance from the Flask server',
+            ], 500);
+        }
+
+        $users = json_decode($users_res->body(), true)['users'];
+        $attendances = json_decode($atts_res->body(), true)['attendance'];
+
+        $userMap = [];
+        foreach ($users as $user) {
+            $userMap[$user['user_id']] = $user;
+        }
+
+        $mergedAttendance = [];
+        foreach ($attendances as $att) {
+            $user_id = $att['user_id'];
+            if (isset($userMap[$user_id])) {
+                $mergedAttendance[] = array_merge($att, $userMap[$user_id]);
+            } else {
+                // Optionally handle attendance with no matching user
+                $mergedAttendance[] = $att + ['name' => 'Unknown User'];
+            }
+        }
+        $newRecordsCount = 0;
+        foreach ($mergedAttendance as $att) {
+            $timestamp = date('Y-m-d H:i:s', strtotime($att["timestamp"]));
+            $attendance = Attendance::firstOrCreate(
+                ['att_uid' => $att["att_uid"]],
+                [
+                    'timestamp' => $timestamp,
+                    'user_id'   => $att["user_id"],
+                    'name'      => $att["name"],
+                ]
+            );
+
+            if ($attendance->wasRecentlyCreated) {
+                $newRecordsCount++;
+            }
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Data retrieved successfully',
+            'newRecordsCount' => $newRecordsCount,
+            'data' =>  json_encode($mergedAttendance, JSON_PRETTY_PRINT),
+        ]);
+    }
+
     public function get(Request $request)
     {
         $agencies_dict = ['00500' => '192.168.50.201'];
@@ -73,17 +152,6 @@ class attendanceController extends Controller
             }
         }
 
-        foreach ($mergedAttendance as $att) {
-            $timestamp = date('Y-m-d H:i:s', strtotime($att["timestamp"]));
-            Attendance::firstOrCreate(
-                ['att_uid' => $att["att_uid"]],
-                [
-                    'timestamp' => $timestamp,
-                    'user_id'   => $att["user_id"],
-                    'name'      => $att["name"],
-                ]
-            );
-        }
         return response()->json([
             'success' => true,
             'message' => 'Data retrieved successfully',
