@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Http;
+use App\Models\Attendance;
 
 class attendanceController extends Controller
 {
@@ -72,6 +73,17 @@ class attendanceController extends Controller
             }
         }
 
+        foreach ($mergedAttendance as $att) {
+            $timestamp = date('Y-m-d H:i:s', strtotime($att["timestamp"]));
+            Attendance::firstOrCreate(
+                ['att_uid' => $att["att_uid"]],
+                [
+                    'timestamp' => $timestamp,
+                    'user_id'   => $att["user_id"],
+                    'name'      => $att["name"],
+                ]
+            );
+        }
         return response()->json([
             'success' => true,
             'message' => 'Data retrieved successfully',
@@ -118,6 +130,7 @@ class attendanceController extends Controller
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
             'agency_code' => ['required', Rule::in(array_keys($agencies_dict))],
+            'user_id' => ['required'],
         ]);
 
         $deviceIp = $agencies_dict[$request->agency_code];
