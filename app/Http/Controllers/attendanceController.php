@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Http;
 use App\Models\Attendance;
+use Carbon\Carbon;
 
 class attendanceController extends Controller
 {
@@ -72,13 +73,16 @@ class attendanceController extends Controller
         }
         $newRecordsCount = 0;
         foreach ($mergedAttendance as $att) {
-            $timestamp = date('Y-m-d H:i:s', strtotime($att["timestamp"]));
+            $timestamp = Carbon::createFromFormat('D, d M Y H:i:s \G\M\T', $att["timestamp"], 'GMT')
+                ->toDateTimeString();
+
             $attendance = Attendance::firstOrCreate(
                 ['att_uid' => $att["att_uid"]],
                 [
                     'timestamp' => $timestamp,
                     'user_id'   => $att["user_id"],
                     'name'      => $att["name"],
+                    'agency_code' => $request->agency_code,
                 ]
             );
 
@@ -104,58 +108,15 @@ class attendanceController extends Controller
             'agency_code' => ['required', Rule::in(array_keys($agencies_dict))],
         ]);
 
-        $deviceIp = $agencies_dict[$request->agency_code];
-
-        $usersUrl = env('FLASK_URL') . '/api/attendance/get-users';
-        $attsUrl = env('FLASK_URL') . '/api/attendance/get-attendance';
-
-        $users_res = Http::get($usersUrl, [
-            'device_ip' => $deviceIp,
-        ]);
-
-        if ($users_res->failed()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve users from the Flask server',
-            ], 500);
-        }
-
-        $atts_res = Http::get($attsUrl, [
-            'device_ip' => $deviceIp,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-        ]);
-
-        if ($atts_res->failed()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve attendance from the Flask server',
-            ], 500);
-        }
-
-        $users = json_decode($users_res->body(), true)['users'];
-        $attendances = json_decode($atts_res->body(), true)['attendance'];
-
-        $userMap = [];
-        foreach ($users as $user) {
-            $userMap[$user['user_id']] = $user;
-        }
-
-        $mergedAttendance = [];
-        foreach ($attendances as $att) {
-            $user_id = $att['user_id'];
-            if (isset($userMap[$user_id])) {
-                $mergedAttendance[] = array_merge($att, $userMap[$user_id]);
-            } else {
-                // Optionally handle attendance with no matching user
-                $mergedAttendance[] = $att + ['name' => 'Unknown User'];
-            }
-        }
+        $attendance = Attendance::where('agency_code', $request->agency_code)
+            ->whereDate('timestamp', '>=', $request->start_date)
+            ->whereDate('timestamp', '<=', $request->end_date)
+            ->get();
 
         return response()->json([
             'success' => true,
             'message' => 'Data retrieved successfully',
-            'data' =>  json_encode($mergedAttendance, JSON_PRETTY_PRINT),
+            'data' =>  json_encode($attendance, JSON_PRETTY_PRINT),
         ]);
     }
 

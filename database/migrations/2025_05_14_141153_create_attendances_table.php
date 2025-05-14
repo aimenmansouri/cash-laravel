@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('att_uid')->unique();
             $table->string('name');
+            $table->string('agency_code');
             $table->timestamps();
         });
     }

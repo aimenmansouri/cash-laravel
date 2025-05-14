@@ -35,6 +35,8 @@ import { Input } from "@/Components/ui/input";
 
 import { Download } from "lucide-react";
 
+import { useToast } from "@/hooks/use-toast";
+
 interface AgencyCode {
     value: string;
     label: string;
@@ -43,6 +45,8 @@ interface AgencyCode {
 const agencyCodes: AgencyCode[] = [{ value: "00500", label: "DR Annaba" }];
 
 export default function Index() {
+    const { toast } = useToast();
+
     const [formData, setFormData] = useState({
         start_date: "",
         end_date: "",
@@ -91,6 +95,29 @@ export default function Index() {
             setLoading(false);
         }
     };
+    const [syncLoading, setSyncLoading] = useState(false);
+    const handleSync = async () => {
+        if (formData2.agency_code == "") return;
+        setSyncLoading(true);
+        try {
+            const response = await axios.get(route("hr.attendance.sync"), {
+                params: {
+                    agency_code: formData2.agency_code,
+                },
+            });
+            console.log(response.data);
+            toast({
+                title: "Attendance synced",
+                description:
+                    "Attendance synced new recordes added : " +
+                    response.data.newRecordsCount,
+            });
+        } catch (error) {
+            console.error("Fetch error:", error);
+        } finally {
+            setSyncLoading(false);
+        }
+    };
 
     const handleSubmitGetUsers = async (agency_code: string) => {
         setLoading2(true);
@@ -109,7 +136,15 @@ export default function Index() {
     };
 
     const handleGetExcelForUser = async (user: any, agency_code: string) => {
-        console.log("getting for", user, agency_code , "start date : " , sheetFormData.start_date , " end date : ", sheetFormData.end_date);
+        console.log(
+            "getting for",
+            user,
+            agency_code,
+            "start date : ",
+            sheetFormData.start_date,
+            " end date : ",
+            sheetFormData.end_date
+        );
     };
 
     const setDate = (
@@ -135,9 +170,9 @@ export default function Index() {
     return (
         <HRLayout>
             <div className="container mx-auto py-6">
-                <div className="w-1/2 mx-auto mb-3">
+                <div className="w-1/2 mx-auto mb-3 flex items-end space-x-3">
                     {/* Agency Code */}
-                    <div className="flex flex-col space-y-1.5">
+                    <div className="flex w-3/4 flex-col space-y-1.5">
                         Agency Code
                         <Select
                             disabled={loading2}
@@ -166,6 +201,15 @@ export default function Index() {
                             </SelectContent>
                         </Select>
                     </div>
+                    {formData2.agency_code ? (
+                        <div className="w-1/4">
+                            <Button onClick={handleSync} disabled={syncLoading}>
+                                sync
+                            </Button>
+                        </div>
+                    ) : (
+                        ""
+                    )}
                 </div>
                 <Card className="mb-6">
                     <CardHeader>

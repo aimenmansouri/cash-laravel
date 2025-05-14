@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Attendance extends Model
 {
-    protected $fillable = ['att_uid', 'timestamp', 'user_id', 'name'];
+    protected $fillable = ['att_uid', 'timestamp', 'user_id', 'name', 'agency_code'];
 }
