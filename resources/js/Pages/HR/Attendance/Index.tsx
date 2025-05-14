@@ -100,6 +100,10 @@ export default function Index() {
         }
     };
 
+    const handleGetExcelForUser = async (user: any, agency_code: string) => {
+        console.log("getting for", user, agency_code);
+    };
+
     const setDate = (
         key: "start_date" | "end_date",
         date: Date | undefined
@@ -173,7 +177,14 @@ export default function Index() {
                                             </TableCell>
                                             <TableCell>{i.name}</TableCell>
                                             <TableCell className="text-right">
-                                                <Button>
+                                                <Button
+                                                    onClick={() =>
+                                                        handleGetExcelForUser(
+                                                            i,
+                                                            formData2.agency_code
+                                                        )
+                                                    }
+                                                >
                                                     <Download />
                                                 </Button>
                                             </TableCell>
