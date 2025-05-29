@@ -18,6 +18,7 @@ class attendanceController extends Controller
 
     public function syncAttendance(Request $request)
     {
+
         $agencies_dict = ['00500' => '192.168.50.201'];
 
         $request->validate([
@@ -40,11 +41,18 @@ class attendanceController extends Controller
             ], 500);
         }
 
-        $atts_res = Http::get($attsUrl, [
-            'device_ip' => $deviceIp,
-            'start_date' => '1970-01-01',
-            'end_date'   => '2100-01-01',
-        ]);
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $atts_res = Http::timeout(0) // Remove HTTP timeout
+            ->withOptions([
+                'stream' => true,
+            ])
+            ->get($attsUrl, [
+                'device_ip' => $deviceIp,
+                'start_date' => '2025-04-01',
+                'end_date'   => '2100-01-01',
+            ]);
 
         if ($atts_res->failed()) {
             return response()->json([
